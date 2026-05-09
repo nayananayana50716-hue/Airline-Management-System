@@ -1,0 +1,133 @@
+/* ===== GOOGLE FONT ===== */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* ===== HEADER ===== */
+
+.header {
+  width: 100%;
+  height: 90px;
+  padding: 0 30px;
+  background: linear-gradient(135deg, #0f172a, #1e293b, #334155);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+  font-family: "Poppins", sans-serif;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+}
+
+/* ===== CENTER TITLE ===== */
+
+.header h2 {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+
+  font-size: 38px;
+  font-weight: 700;
+  color: #facc15;
+
+  letter-spacing: 1px;
+  text-shadow: 0 3px 10px rgba(0,0,0,0.4);
+}
+
+/* ===== RIGHT SECTION ===== */
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* ===== ADMIN TEXT ===== */
+
+.admin {
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 600;
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* ===== BUTTON COMMON ===== */
+
+.admin-btn,
+.logout-btn {
+  padding: 12px 22px;
+  border: none;
+  border-radius: 12px;
+
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* ===== ADMIN BUTTON ===== */
+
+.admin-btn {
+  background: linear-gradient(to right, #06b6d4, #2563eb);
+  box-shadow: 0 6px 16px rgba(37,99,235,0.35);
+}
+
+.admin-btn:hover {
+  transform: translateY(-3px);
+  background: linear-gradient(to right, #0891b2, #1d4ed8);
+  box-shadow: 0 10px 22px rgba(37,99,235,0.45);
+}
+
+/* ===== LOGOUT BUTTON ===== */
+
+.logout-btn {
+  background: linear-gradient(to right, #ef4444, #b91c1c);
+  box-shadow: 0 6px 16px rgba(239,68,68,0.35);
+}
+
+.logout-btn:hover {
+  transform: translateY(-3px);
+  background: linear-gradient(to right, #dc2626, #7f1d1d);
+  box-shadow: 0 10px 22px rgba(239,68,68,0.45);
+}
+
+/* ===== CLICK EFFECT ===== */
+
+.admin-btn:active,
+.logout-btn:active {
+  transform: scale(0.95);
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 768px) {
+
+  .header {
+    flex-direction: column;
+    justify-content: center;
+    height: auto;
+    padding: 20px;
+    gap: 18px;
+  }
+
+  .header h2 {
+    position: static;
+    transform: none;
+    text-align: center;
+    font-size: 30px;
+  }
+
+  .header-right {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .admin-btn,
+  .logout-btn {
+    width: 140px;
+  }
+}

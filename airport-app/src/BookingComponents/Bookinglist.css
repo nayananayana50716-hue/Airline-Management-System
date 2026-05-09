@@ -1,0 +1,130 @@
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(135deg, #e3f2fd, #f8fbff);
+  margin: 0;
+  padding: 0;
+}
+
+/* Page title */
+h2 {
+  text-align: center;
+  margin: 20px 0;
+  color: #1f2d3d;
+  font-size: 28px;
+}
+
+/* Boarding card container */
+.boarding-card {
+  display: flex;
+  justify-content: space-between;
+  background: #ffffff;
+  width: 90%;
+  max-width: 650px;
+  margin: 20px auto;
+  border-radius: 18px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  position: relative;
+  transition: 0.3s ease;
+}
+
+.boarding-card:hover {
+  transform: translateY(-5px);
+}
+
+/* LEFT SIDE */
+.left {
+  width: 65%;
+  padding: 20px;
+  border-right: 2px dashed #d0d0d0;
+}
+
+/* Flight title */
+.flight-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+/* Route */
+.route {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+/* Info text */
+.left p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #444;
+}
+
+/* Badge style */
+.badge {
+  display: inline-block;
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  margin: 5px 5px 0 0;
+  font-weight: 500;
+}
+
+/* RIGHT SIDE */
+.right {
+  width: 35%;
+  background: linear-gradient(135deg, #e3f2fd, #ffffff);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  text-align: center;
+}
+
+.right h4 {
+  color: #1565c0;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.right p {
+  font-size: 14px;
+  color: #555;
+}
+
+/* Buttons */
+button {
+  margin-top: 10px;
+  margin-right: 8px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: 0.3s ease;
+}
+
+/* Delete button */
+button:first-of-type {
+  background: #ff4d4d;
+  color: white;
+}
+
+button:first-of-type:hover {
+  background: #d93636;
+  transform: scale(1.05);
+}
+
+/* PDF button */
+button:last-of-type {
+  background: #1e88e5;
+  color: white;
+}
+
+button:last-of-type:hover {
+  background: #1565c0;
+  transform: scale(1.05);
+}

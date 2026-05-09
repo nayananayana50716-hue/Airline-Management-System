@@ -1,0 +1,247 @@
+/* ===== GOOGLE FONT ===== */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* ===== BACKGROUND ===== */
+
+.flight-container {
+  min-height: 100vh;
+  padding: 30px;
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(135deg, #0f172a, #1e3a8a, #312e81);
+}
+
+/* ===== TITLE ===== */
+
+.title {
+  text-align: center;
+  font-size: 42px;
+  font-weight: 700;
+  color: #facc15;
+  margin-bottom: 30px;
+  letter-spacing: 1px;
+  text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* ===== TABLE WRAPPER ===== */
+
+.table-wrapper {
+  max-width: 1100px;
+  margin: auto;
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* ===== TABLE ===== */
+
+.flight-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* ===== TABLE HEADER ===== */
+
+.flight-table th {
+  background: linear-gradient(to right, #2563eb, #1d4ed8);
+  color: white;
+  padding: 16px;
+  font-size: 18px;
+  letter-spacing: 0.5px;
+}
+
+/* ===== TABLE DATA ===== */
+
+.flight-table td {
+  padding: 16px;
+  text-align: center;
+  font-size: 17px;
+  color: #f8fafc;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+/* ===== ROW COLORS ===== */
+
+.flight-table tbody tr:nth-child(odd) {
+  background: rgba(255,255,255,0.04);
+}
+
+.flight-table tbody tr:nth-child(even) {
+  background: rgba(255,255,255,0.08);
+}
+
+/* ===== HOVER EFFECT ===== */
+
+.flight-table tbody tr:hover {
+  background: rgba(59,130,246,0.25);
+  transform: scale(1.01);
+  transition: 0.3s;
+}
+
+/* ===== ACTIVE ROW ===== */
+
+.active-row {
+  background: rgba(250,204,21,0.25) !important;
+  border-left: 5px solid #facc15;
+}
+
+/* ===== RADIO BUTTON ===== */
+
+input[type="radio"] {
+  transform: scale(1.3);
+  accent-color: #facc15;
+  cursor: pointer;
+}
+
+/* ===== BOOK BUTTON ===== */
+
+.book-btn {
+  display: block;
+  margin: 35px auto;
+  padding: 14px 28px;
+  font-size: 20px;
+  font-weight: 600;
+  background: linear-gradient(to right, #06b6d4, #2563eb);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(37,99,235,0.35);
+}
+
+.book-btn:hover {
+  transform: translateY(-4px) scale(1.04);
+  background: linear-gradient(to right, #0891b2, #1d4ed8);
+  box-shadow: 0 12px 28px rgba(37,99,235,0.45);
+}
+
+/* ===== MODAL ===== */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15,23,42,0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(4px);
+}
+
+/* ===== FORM CARD ===== */
+
+.form-card {
+  width: 360px;
+  padding: 30px;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #1e293b, #0f172a);
+  display: grid;
+  gap: 16px;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.45);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* ===== FORM TITLE ===== */
+
+.form-title {
+  text-align: center;
+  font-size: 26px;
+  color: #facc15;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+/* ===== INPUTS ===== */
+
+.form-card input,
+.form-card select {
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.08);
+  color: white;
+  font-size: 16px;
+  outline: none;
+  transition: 0.3s;
+}
+
+/* ===== PLACEHOLDER ===== */
+
+.form-card input::placeholder {
+  color: #cbd5e1;
+}
+
+/* ===== INPUT FOCUS ===== */
+
+.form-card input:focus,
+.form-card select:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 10px rgba(56,189,248,0.35);
+}
+
+/* ===== SUBMIT BUTTON ===== */
+
+.submit-btn {
+  background: linear-gradient(to right, #16a34a, #15803d);
+  color: white;
+  padding: 13px;
+  border: none;
+  border-radius: 10px;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.submit-btn:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 18px rgba(34,197,94,0.35);
+}
+
+/* ===== CLOSE BUTTON ===== */
+
+.close-btn {
+  background: linear-gradient(to right, #ef4444, #b91c1c);
+  color: white;
+  padding: 13px;
+  border: none;
+  border-radius: 10px;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.close-btn:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 18px rgba(239,68,68,0.35);
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 768px) {
+
+  .title {
+    font-size: 32px;
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+  }
+
+  .flight-table th,
+  .flight-table td {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .form-card {
+    width: 90%;
+  }
+}

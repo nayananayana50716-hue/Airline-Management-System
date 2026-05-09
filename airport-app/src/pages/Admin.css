@@ -1,0 +1,189 @@
+/* ====================================
+   MAIN ADMIN LAYOUT
+==================================== */
+
+.admin-wrapper {
+  min-height: 100vh;
+  background: #f1f5f9;
+  margin-left: 270px; /* sidebar space */
+  padding: 35px;
+  transition: 0.3s ease;
+  box-sizing: border-box;
+}
+
+/* ====================================
+   CONTENT AREA
+==================================== */
+
+.admin-content {
+  width: 100%;
+  max-width: 1300px;
+  margin: auto;
+}
+
+/* ====================================
+   WELCOME HEADER
+==================================== */
+
+.welcome {
+  font-size: 38px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 35px;
+  padding: 25px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #1e3a8a, #2563eb);
+  color: white;
+  box-shadow: 0 8px 20px rgba(37,99,235,0.2);
+}
+
+/* ====================================
+   STATS CARDS
+==================================== */
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+  margin-bottom: 40px;
+}
+
+/* ====================================
+   SINGLE CARD
+==================================== */
+
+.card {
+  background: white;
+  border-radius: 20px;
+  padding: 30px 20px;
+  text-align: center;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  transition: 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 6px;
+  width: 100%;
+  background: linear-gradient(to right, #2563eb, #7c3aed);
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(37,99,235,0.15);
+}
+
+.card h3 {
+  font-size: 22px;
+  color: #334155;
+  margin-bottom: 18px;
+  font-weight: 600;
+}
+
+.card p {
+  font-size: 34px;
+  font-weight: bold;
+  color: #0f172a;
+}
+
+/* ====================================
+   ACTION SECTION
+==================================== */
+
+.actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+}
+
+/* ====================================
+   ACTION BUTTONS
+==================================== */
+
+.actions button {
+  padding: 18px;
+  border: none;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s ease;
+  box-shadow: 0 6px 14px rgba(37,99,235,0.18);
+}
+
+.actions button:hover {
+  transform: translateY(-3px);
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+}
+
+/* ====================================
+   SIDEBAR FIX
+==================================== */
+
+.sidebar {
+  width: 270px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: linear-gradient(180deg, #0f172a, #134e4a);
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+/* ====================================
+   TABLET VIEW
+==================================== */
+
+@media (max-width: 1200px) {
+
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ====================================
+   MOBILE VIEW
+==================================== */
+
+@media (max-width: 768px) {
+
+  .admin-wrapper {
+    margin-left: 0;
+    padding: 20px;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .actions {
+    grid-template-columns: 1fr;
+  }
+
+  .welcome {
+    font-size: 28px;
+    padding: 20px;
+  }
+
+  .card h3 {
+    font-size: 20px;
+  }
+
+  .card p {
+    font-size: 28px;
+  }
+
+  .actions button {
+    font-size: 16px;
+    padding: 15px;
+  }
+}

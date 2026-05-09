@@ -1,0 +1,233 @@
+/* =========================
+   DASHBOARD PAGE
+========================= */
+
+.dashboard {
+  margin-left: 260px;
+  padding: 30px;
+  background: #f4f7fb;
+  min-height: 100vh;
+  transition: 0.3s ease;
+}
+
+/* =========================
+   TOP HEADER
+========================= */
+
+.dashboard-header {
+  background: linear-gradient(135deg, #0f172a, #1e3a8a);
+  padding: 25px;
+  border-radius: 18px;
+  color: white;
+  text-align: center;
+  margin-bottom: 35px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.dashboard-header h1 {
+  font-size: 48px;
+  margin-bottom: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.dashboard-header p {
+  font-size: 26px;
+  color: #facc15;
+  font-weight: 600;
+}
+
+/* =========================
+   SECTION TITLE
+========================= */
+
+.section-title {
+  text-align: center;
+  font-size: 40px;
+  margin-bottom: 35px;
+  color: #0f172a;
+  font-weight: bold;
+}
+
+/* =========================
+   FLIGHTS GRID
+========================= */
+
+.flights-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+/* =========================
+   FLIGHT CARD
+========================= */
+
+.flight-card {
+  background: white;
+  border-radius: 22px;
+  padding: 28px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  transition: 0.3s;
+  border: 1px solid #e2e8f0;
+}
+
+.flight-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(37,99,235,0.2);
+}
+
+.flight-card h2 {
+  color: #1e3a8a;
+  margin-bottom: 18px;
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.flight-card p {
+  font-size: 20px;
+  margin: 12px 0;
+  color: #334155;
+  font-weight: 500;
+}
+
+/* =========================
+   BOOK BUTTON
+========================= */
+
+.book-btn {
+  width: 100%;
+  margin-top: 20px;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.book-btn:hover {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+  transform: scale(1.02);
+}
+
+/* =========================
+   SIDEBAR FIXED
+========================= */
+
+.sidebar {
+  width: 260px;
+  height: 100vh;
+  background: linear-gradient(180deg, #0f172a, #134e4a);
+  position: fixed;
+  left: 0;
+  top: 0;
+  overflow-y: auto;
+  padding-top: 20px;
+  z-index: 1000;
+}
+
+/* LOGO */
+
+.sidebar-logo {
+  color: white;
+  font-size: 32px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+/* MENU */
+
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 15px;
+}
+
+.sidebar-menu a {
+  text-decoration: none;
+  color: #e2e8f0;
+  padding: 15px 18px;
+  border-radius: 12px;
+  font-size: 18px;
+  transition: 0.3s;
+}
+
+.sidebar-menu a:hover {
+  background: #2563eb;
+  color: white;
+}
+
+/* ACTIVE MENU */
+
+.sidebar-menu .active {
+  background: #ec4899;
+  color: white;
+  box-shadow: 0 4px 10px rgba(236,72,153,0.4);
+}
+
+/* =========================
+   TOPBAR
+========================= */
+
+.topbar {
+  height: 80px;
+  background: white;
+  border-radius: 16px;
+  margin-bottom: 30px;
+  padding: 0 25px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1200px) {
+  .flights-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    margin-left: 0;
+    padding: 20px;
+  }
+
+  .sidebar {
+    width: 220px;
+  }
+
+  .flights-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-header h1 {
+    font-size: 34px;
+  }
+
+  .dashboard-header p {
+    font-size: 20px;
+  }
+
+  .section-title {
+    font-size: 30px;
+  }
+
+  .flight-card h2 {
+    font-size: 26px;
+  }
+
+  .flight-card p {
+    font-size: 18px;
+  }
+}

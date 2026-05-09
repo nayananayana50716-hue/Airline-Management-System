@@ -1,0 +1,33 @@
+.success-container {
+  text-align: center;
+  padding: 30px;
+}
+
+.ticket {
+  width: 400px;
+  margin: auto;
+  padding: 20px;
+  border: 2px solid #333;
+  border-radius: 10px;
+  background: #f9f9f9;
+  text-align: left;
+}
+
+.ticket h2 {
+  margin-top: 20px;
+  color: #0077cc;
+}
+
+.ticket p {
+  margin: 8px 0;
+}
+
+button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: #0077cc;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
