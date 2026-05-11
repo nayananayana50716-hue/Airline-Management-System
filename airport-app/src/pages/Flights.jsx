@@ -1,132 +1,90 @@
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import API from "../api";
 import "./Flights.css";
 
 function Flights() {
-  const [flight, setFlight] = useState({
-    name: "",
-    from: "",
-    to: "",
-    price: "",
-    time: "",
-  });
-
   const [flights, setFlights] = useState([]);
 
-  // Load flights
+  // Fetch flights
   useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("flights")) || [];
-    setFlights(saved);
+    const fetchFlights = async () => {
+      try {
+        const res = await API.get("/flights");
+        setFlights(res.data);
+      } catch (error) {
+        console.log("Error fetching flights:", error);
+      }
+    };
+
+    fetchFlights();
   }, []);
 
-  // Save flights
-  useEffect(() => {
-    localStorage.setItem("flights", JSON.stringify(flights));
-  }, [flights]);
+  // BOOK FLIGHT FUNCTION
+  const handleBook = async (flight) => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const token = localStorage.getItem("token");
 
-  const handleChange = (e) => {
-    setFlight({ ...flight, [e.target.name]: e.target.value });
-  };
+      const bookingData = {
+        userId: user._id,
+        flightId: flight._id,
+        seatsBooked: 1,
+      };
 
-  const addFlight = () => {
-    const { name, from, to, price, time } = flight;
+      const res = await API.post("/bookings", bookingData, {
+        headers: {
+          Authorization: token,
+        },
+      });
 
-    if (!name || !from || !to || !price || !time) {
-      alert("Please fill all fields");
-      return;
+      alert("Booking Successful!");
+      console.log(res.data);
+
+    } catch (error) {
+      console.log(error);
+      alert("Booking failed");
     }
-
-    setFlights([...flights, flight]);
-
-    setFlight({
-      name: "",
-      from: "",
-      to: "",
-      price: "",
-      time: "",
-    });
-  };
-
-  const deleteFlight = (index) => {
-    const updated = flights.filter((_, i) => i !== index);
-    setFlights(updated);
   };
 
   return (
     <div className="flights-container">
-      <h2 className="title">✈ Flight Management</h2>
+      <h2>✈ Available Flights</h2>
 
-      {/* FORM */}
-      <div className="form-card">
-        <h3>Add Flight</h3>
+      {flights.length === 0 ? (
+        <p>No flights available</p>
+      ) : (
+        flights.map((flight) => (
+          <div
+            key={flight._id}
+            style={{
+              border: "1px solid #ccc",
+              margin: "10px",
+              padding: "10px",
+              borderRadius: "8px",
+            }}
+          >
+            <h3>{flight.flightNumber}</h3>
+            <p>{flight.from} → {flight.to}</p>
+            <p>💰 Price: ₹{flight.price}</p>
+            <p>🪑 Seats: {flight.seatsAvailable}</p>
 
-        <div className="form-group">
-          <input
-            name="name"
-            placeholder="Flight Name"
-            value={flight.name}
-            onChange={handleChange}
-          />
-
-          <input
-            name="from"
-            placeholder="From"
-            value={flight.from}
-            onChange={handleChange}
-          />
-
-          <input
-            name="to"
-            placeholder="To"
-            value={flight.to}
-            onChange={handleChange}
-          />
-
-          <input
-            type="number"
-            name="price"
-            placeholder="Price"
-            value={flight.price}
-            onChange={handleChange}
-          />
-
-          <input
-            type="time"
-            name="time"
-            value={flight.time}
-            onChange={handleChange}
-          />
-        </div>
-
-        <button className="add-btn" onClick={addFlight}>
-          + Add Flight
-        </button>
-      </div>
-
-      {/* LIST */}
-      <div className="list-card">
-        <h3>Flight List</h3>
-
-        {flights.length === 0 ? (
-          <p className="empty">No flights available</p>
-        ) : (
-          flights.map((f, index) => (
-            <div key={index} className="flight-item">
-              <div className="flight-info">
-                <h4>{f.name}</h4>
-                <p>{f.from} → {f.to}</p>
-                <span>🕒 {f.time} | 💰 ₹{f.price}</span>
-              </div>
-
-              <button
-                className="delete-btn"
-                onClick={() => deleteFlight(index)}
-              >
-                ✖
-              </button>
-            </div>
-          ))
-        )}
-      </div>
+            {/* BOOK BUTTON */}
+            <button
+              onClick={() => handleBook(flight)}
+              style={{
+                marginTop: "10px",
+                padding: "8px 12px",
+                background: "green",
+                color: "white",
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              Book Now
+            </button>
+          </div>
+        ))
+      )}
     </div>
   );
 }

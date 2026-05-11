@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import API from "../api"; // 👈 IMPORTANT (your axios file)
 import KIAImage from "../assets/KIAImage.jpg.png";
 import "./Login.css";
 
@@ -9,27 +10,29 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = (e) => {
+  // ✅ UPDATED LOGIN FUNCTION (BACKEND CONNECTED)
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
+    try {
+      const data = { email, password };
 
-    const user = users.find((u) => u.email === email);
+      // 🔥 CALL BACKEND API
+      const res = await API.post("/users/login", data);
 
-    if (!user) {
-      alert("User not found. Please register!");
-      return;
+      // 💾 STORE TOKEN + USER
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+
+      alert("Login Successful!");
+
+      // 🚀 GO TO DASHBOARD
+      navigate("/dashboard");
+
+    } catch (error) {
+      console.log(error);
+      alert("Login failed! Check email/password or backend.");
     }
-
-    if (user.password !== password) {
-      alert("Incorrect password!");
-      return;
-    }
-
-    localStorage.setItem("user", JSON.stringify(user));
-
-    alert("Login Successful!");
-    navigate("/dashboard");
   };
 
   return (

@@ -1,129 +1,103 @@
-import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import API from "../api";
+import SeatSelector from "../Components/SeatSelector";
 import "./Booking.css";
+import generateTicket from "../utils/generateTicket";
 
 function Booking() {
-  const location = useLocation();
+  const [flight, setFlight] = useState(null);
+  const [selectedSeat, setSelectedSeat] = useState("");
 
-  const editData = location.state?.editData;
-  const editIndex = location.state?.index;
-
-  const [booking, setBooking] = useState({
-    name: "",
-    flightName: "",
-    from: "",
-    to: "",
-    time: "",
-  });
-
-  const [bookings, setBookings] = useState([]);
-  const [message, setMessage] = useState("");
-
-  // Load bookings
+  // Fetch flight data
   useEffect(() => {
-    const stored =
-      JSON.parse(localStorage.getItem("bookings")) || [];
-    setBookings(stored);
+    const fetchFlight = async () => {
+      try {
+        const res = await API.get("/flights");
+
+        // Example: first flight
+        setFlight(res.data[0]);
+
+      } catch (error) {
+        console.log("Error fetching flight:", error);
+      }
+    };
+
+    fetchFlight();
   }, []);
 
-  // Pre-fill form if editing
-  useEffect(() => {
-    if (editData) {
-      setBooking(editData);
-    }
-  }, [editData]);
+  // Handle booking
+  const handleBook = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const token = localStorage.getItem("token");
 
-  const handleChange = (e) => {
-    setBooking({ ...booking, [e.target.name]: e.target.value });
+      const bookingData = {
+        userId: user._id,
+        flightId: flight._id,
+        seatNumber: selectedSeat,
+      };
+
+      await API.post("/bookings", bookingData, {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      alert("✅ Seat Booked Successfully!");
+
+    } catch (error) {
+      console.log(error);
+      alert("❌ Booking failed");
+    }
   };
 
-  const handleSubmit = () => {
-    if (
-      !booking.name ||
-      !booking.flightName ||
-      !booking.from ||
-      !booking.to ||
-      !booking.time
-    ) {
-      alert("Please fill all fields");
-      return;
-    }
-
-    let updatedBookings = [...bookings];
-
-    if (editData !== undefined) {
-      // UPDATE existing booking
-      updatedBookings[editIndex] = booking;
-      setMessage("✏ Booking updated successfully!");
-    } else {
-      // ADD new booking
-      updatedBookings.push(booking);
-      setMessage("✅ Booking successful!");
-    }
-
-    setBookings(updatedBookings);
-    localStorage.setItem("bookings", JSON.stringify(updatedBookings));
-
-    // Reset form
-    setBooking({
-      name: "",
-      flightName: "",
-      from: "",
-      to: "",
-      time: "",
-    });
-
-    setTimeout(() => setMessage(""), 2500);
-  };
+  if (!flight) {
+    return <p>Loading flights...</p>;
+  }
 
   return (
     <div className="booking-container">
-      <h2 className="title">
-        {editData ? "✏ Edit Booking" : "✈ Book Flight"}
-      </h2>
+      <h2>✈ Select Your Seat</h2>
 
-      {message && <div className="success-msg">{message}</div>}
-
-      <div className="form-card">
-        <input
-          name="name"
-          placeholder="Passenger Name"
-          value={booking.name}
-          onChange={handleChange}
-        />
-
-        <input
-          name="flightName"
-          placeholder="Flight Name"
-          value={booking.flightName}
-          onChange={handleChange}
-        />
-
-        <input
-          name="from"
-          placeholder="From"
-          value={booking.from}
-          onChange={handleChange}
-        />
-
-        <input
-          name="to"
-          placeholder="To"
-          value={booking.to}
-          onChange={handleChange}
-        />
-
-        <input
-          name="time"
-          placeholder="Time"
-          value={booking.time}
-          onChange={handleChange}
-        />
-
-        <button onClick={handleSubmit}>
-          {editData ? "Update Booking" : "Book Now"}
-        </button>
+      {/* Flight Info */}
+      <div className="flight-info">
+        <h3>{flight.flightNumber}</h3>
+        <p>
+          {flight.from} → {flight.to}
+        </p>
+        <p>💰 ₹{flight.price}</p>
       </div>
+
+      {/* Seat Selector */}
+      <SeatSelector
+        seats={flight.seats}
+        selectedSeat={selectedSeat}
+        setSelectedSeat={setSelectedSeat}
+      />
+
+      {/* Selected Seat */}
+      {selectedSeat && (
+        <p style={{ marginTop: "15px" }}>
+          Selected Seat: <strong>{selectedSeat}</strong>
+        </p>
+      )}
+
+      {/* Book Button */}
+      <button
+        onClick={handleBook}
+        disabled={!selectedSeat}
+        style={{
+          marginTop: "20px",
+          padding: "10px 20px",
+          background: "blue",
+          color: "white",
+          border: "none",
+          borderRadius: "6px",
+          cursor: "pointer",
+        }}
+      >
+        Book Seat
+      </button>
     </div>
   );
 }

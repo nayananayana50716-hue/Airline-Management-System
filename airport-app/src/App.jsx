@@ -20,7 +20,11 @@ import Bookinglist from "./BookingComponents/Bookinglist";
 import Layout from "./Components/Layout";
 import PrivateRoute from "./Components/PrivateRoute";
 import "./App.css";
+import MyBookings from "./Pages/MyBookings";
+import AdminFlights from "./Pages/AdminFlights";
+import FlightCard from "../Components/FlightCard";
 
+import AdminDashboard from "./Pages/AdminDashboard";
 function App() {
   return (
     <Routes>
@@ -55,7 +59,10 @@ function App() {
 
       {/* FALLBACK */}
       <Route path="*" element={<Navigate to="/login" />} />
-
+       <Route path="/mybookings" element={<MyBookings />} />
+   <Route path="/admin-flights" element={<AdminFlights />} />
+ 
+   <Route path="/admin-dashboard" element={<AdminDashboard />} />
     </Routes>
   );
 }
