@@ -3,34 +3,71 @@ import Flight from "../models/Flight.js";
 
 export const createBooking = async (req, res) => {
   try {
-    const { userId, flightId, seatsBooked } = req.body;
+    const { userId, flightId, seatNumber } = req.body;
 
     const flight = await Flight.findById(flightId);
 
     if (!flight) {
-      return res.json({ message: "Flight not found" });
+      return res.status(404).json({
+        message: "Flight not found",
+      });
     }
 
-    // ❌ check seats
-    if (flight.seatsAvailable < seatsBooked) {
-      return res.json({ message: "Not enough seats available" });
+    // Find selected seat
+    const seat = flight.seats.find(
+      (s) => s.number === seatNumber
+    );
+
+    // Seat not found
+    if (!seat) {
+      return res.status(404).json({
+        message: "Seat not found",
+      });
     }
 
-    // ✅ reduce seats
-    flight.seatsAvailable -= seatsBooked;
+    // Already booked
+    if (seat.isBooked) {
+      return res.status(400).json({
+        message: "Seat already booked",
+      });
+    }
+
+    // Book seat
+    seat.isBooked = true;
+
     await flight.save();
 
-    // create booking
+    // Create booking
     const booking = await Booking.create({
       userId,
       flightId,
-      seatsBooked,
+      seatNumber,
     });
 
-    res.json(booking);
+    res.json({
+      message: "Booking successful",
+      booking,
+    });
 
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Server error" });
+
+    res.status(500).json({
+      message: "Server error",
+    });
+  }
+};
+
+// GET all bookings
+export const getBookings = async (req, res) => {
+  try {
+    const bookings = await Booking.find();
+
+    res.json(bookings);
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
   }
 };

@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import Flight from "../models/Flight.js";
 
 const seatSchema = new mongoose.Schema({
   number: String,
@@ -7,7 +6,6 @@ const seatSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  
 });
 
 const flightSchema = new mongoose.Schema({
@@ -18,7 +16,7 @@ const flightSchema = new mongoose.Schema({
   arrivalTime: String,
   price: Number,
 
-  // ✅ NEW SEAT SYSTEM
+  // Seat system
   seats: [seatSchema],
 });
 
