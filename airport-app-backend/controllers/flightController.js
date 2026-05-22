@@ -1,75 +1,114 @@
-import Flight from "../models/Flight.js";
+import { pool, sql } from "../config/db.js";
+import { generateSeats } from "../utils/generateSeats.js";
 
-// Generate seats automatically
-const generateSeats = () => {
-  const seats = [];
-
-  const rows = ["A", "B", "C", "D"];
-  const numbers = [1, 2, 3, 4, 5];
-
-  rows.forEach((row) => {
-    numbers.forEach((num) => {
-      seats.push({
-        number: `${row}${num}`,
-        isBooked: false,
-      });
-    });
-  });
-
-  return seats;
-};
-
-// GET all flights
+// ================= GET FLIGHTS =================
 export const getFlights = async (req, res) => {
   try {
-    const flights = await Flight.find();
-    res.json(flights);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    const result = await pool.request().query(`
+      SELECT 
+        f.FlightID AS id,
+        a.AirlineName AS airline,
+        src.City AS source,
+        dest.City AS destination,
+        f.DepartureTime,
+        f.ArrivalTime,
+        f.Status
+      FROM Flights2 f
+      JOIN Airlines a ON f.AirlineID = a.AirlineID
+      JOIN Airports src ON f.SourceAirportID = src.AirportID
+      JOIN Airports dest ON f.DestinationAirportID = dest.AirportID
+    `);
+
+    res.json(result.recordset);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Failed to fetch flights" });
   }
 };
 
-// ADD flight
+// ================= ADD FLIGHT =================
 export const addFlight = async (req, res) => {
   try {
     const {
-      flightNumber,
-      from,
-      to,
-      departureTime,
-      arrivalTime,
-      price,
+      AirlineID,
+      AircraftID,
+      SourceAirportID,
+      DestinationAirportID,
+      DepartureTime,
+      ArrivalTime,
+      Status
     } = req.body;
 
-    const flight = await Flight.create({
-      flightNumber,
-      from,
-      to,
-      departureTime,
-      arrivalTime,
-      price,
+    if (!AirlineID || !AircraftID || !SourceAirportID || !DestinationAirportID) {
+      return res.status(400).json({
+        message: "Missing required fields"
+      });
+    }
 
-      // Auto generate seats
-      seats: generateSeats(),
+    const result = await pool.request()
+      .input("AirlineID", sql.Int, AirlineID)
+      .input("AircraftID", sql.Int, AircraftID)
+      .input("SourceAirportID", sql.Int, SourceAirportID)
+      .input("DestinationAirportID", sql.Int, DestinationAirportID)
+      .input("DepartureTime", sql.DateTime, DepartureTime)
+      .input("ArrivalTime", sql.DateTime, ArrivalTime)
+      .input("Status", sql.VarChar, Status || "Scheduled")
+      .query(`
+        INSERT INTO Flights2
+        (AirlineID, AircraftID, SourceAirportID, DestinationAirportID, DepartureTime, ArrivalTime, Status)
+        OUTPUT INSERTED.FlightID
+        VALUES
+        (@AirlineID, @AircraftID, @SourceAirportID, @DestinationAirportID, @DepartureTime, @ArrivalTime, @Status)
+      `);
+
+    const flightId = result.recordset[0].FlightID;
+
+    // generate seats automatically
+    await generateSeats(flightId);
+
+    res.json({
+      success: true,
+      message: "Flight added successfully",
+      flightId
     });
 
-    res.json(flight);
-
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  } catch (err) {
+    console.log("ADD FLIGHT ERROR:", err);
+    res.status(500).json({ message: "Error adding flight" });
   }
 };
 
-// DELETE flight
+// ================= DELETE FLIGHT =================
 export const deleteFlight = async (req, res) => {
   try {
-    await Flight.findByIdAndDelete(req.params.id);
+    const id = req.params.id;
+
+    const check = await pool.request()
+      .input("id", sql.Int, id)
+      .query(`SELECT FlightID FROM Flights2 WHERE FlightID = @id`);
+
+    if (check.recordset.length === 0) {
+      return res.status(404).json({
+        message: "Flight not found"
+      });
+    }
+
+    await pool.request()
+      .input("id", sql.Int, id)
+      .query(`
+        DELETE FROM Flights2
+        WHERE FlightID = @id
+      `);
 
     res.json({
-      message: "Flight deleted successfully",
+      success: true,
+      message: "Flight deleted successfully"
     });
 
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Error deleting flight"
+    });
   }
 };

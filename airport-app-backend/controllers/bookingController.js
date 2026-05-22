@@ -1,73 +1,115 @@
-import Booking from "../models/Booking.js";
-import Flight from "../models/Flight.js";
+import { sql, pool } from "../config/db.js";
+import sendEmail from "../utils/sendEmail.js";
+import { jsPDF } from "jspdf";
 
+
+// ================= CREATE BOOKING =================
 export const createBooking = async (req, res) => {
   try {
-    const { userId, flightId, seatNumber } = req.body;
-
-    const flight = await Flight.findById(flightId);
-
-    if (!flight) {
-      return res.status(404).json({
-        message: "Flight not found",
-      });
-    }
-
-    // Find selected seat
-    const seat = flight.seats.find(
-      (s) => s.number === seatNumber
-    );
-
-    // Seat not found
-    if (!seat) {
-      return res.status(404).json({
-        message: "Seat not found",
-      });
-    }
-
-    // Already booked
-    if (seat.isBooked) {
-      return res.status(400).json({
-        message: "Seat already booked",
-      });
-    }
-
-    // Book seat
-    seat.isBooked = true;
-
-    await flight.save();
-
-    // Create booking
-    const booking = await Booking.create({
-      userId,
-      flightId,
+    const {
+      name,
+      age,
+      gender,
+      phone,
+      seatType,
       seatNumber,
+      payment,
+      flightId,
+      pnr,
+    } = req.body;
+
+    // SAVE TO DB
+    await pool.request()
+      .input("name", sql.VarChar, name)
+      .input("age", sql.Int, Number(age))
+      .input("gender", sql.VarChar, gender)
+      .input("phone", sql.VarChar, phone)
+      .input("seatType", sql.VarChar, seatType)
+      .input("seatNumber", sql.VarChar, seatNumber)
+      .input("payment", sql.VarChar, payment)
+      .input("flightId", sql.VarChar, String(flightId))
+      .input("pnr", sql.VarChar, pnr)
+      .query(`
+        INSERT INTO bookings1
+        (name, age, gender, phone, seatType, seatNumber, payment, flightId, pnr)
+        VALUES
+        (@name, @age, @gender, @phone, @seatType, @seatNumber, @payment, @flightId, @pnr)
+      `);
+
+    // CREATE PDF
+    const doc = new jsPDF();
+    doc.text("AIRLINE TICKET", 20, 20);
+    doc.text(`Name: ${name}`, 20, 40);
+    doc.text(`Seat: ${seatNumber}`, 20, 50);
+    doc.text(`Flight: ${flightId}`, 20, 60);
+    doc.text(`PNR: ${pnr}`, 20, 70);
+
+    const pdfBuffer = Buffer.from(doc.output("arraybuffer"));
+
+    // EMAIL (safe fallback)
+    await sendEmail({
+      to: "test@gmail.com",
+      subject: "Your Flight Ticket ✈",
+      text: "Booking confirmed. Ticket attached.",
+      attachment: pdfBuffer,
     });
 
-    res.json({
-      message: "Booking successful",
-      booking,
+    res.status(201).json({
+      success: true,
+      message: "Booking created successfully",
     });
 
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log("CREATE BOOKING ERROR:", err);
 
     res.status(500).json({
-      message: "Server error",
+      success: false,
+      message: "Booking failed",
     });
   }
 };
 
-// GET all bookings
+
+// ================= GET BOOKINGS =================
 export const getBookings = async (req, res) => {
   try {
-    const bookings = await Booking.find();
+    const result = await pool.request()
+      .query("SELECT * FROM bookings1");
 
-    res.json(bookings);
+    res.json({
+      success: true,
+      data: result.recordset,
+    });
 
-  } catch (error) {
+  } catch (err) {
+    console.log(err);
+
     res.status(500).json({
-      message: error.message,
+      message: "Error fetching bookings",
+    });
+  }
+};
+
+
+// ================= CANCEL BOOKING =================
+export const cancelBooking = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    await pool.request()
+      .input("id", sql.Int, Number(id))
+      .query("DELETE FROM bookings1 WHERE id = @id");
+
+    res.json({
+      success: true,
+      message: "Booking cancelled",
+    });
+
+  } catch (err) {
+    console.log(err);
+
+    res.status(500).json({
+      message: "Cancel failed",
     });
   }
 };

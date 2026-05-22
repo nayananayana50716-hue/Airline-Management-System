@@ -1,0 +1,44 @@
+.seat-wrapper {
+  text-align: center;
+}
+
+.plane-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.seat-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.seat {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  border: 1px solid #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: #fff;
+  transition: 0.2s;
+}
+
+.seat:hover {
+  background: #e6f0ff;
+}
+
+.seat.selected {
+  background: #007bff;
+  color: white;
+}
+
+.seat.booked {
+  background: #444;
+  color: white;
+  cursor: not-allowed;
+}

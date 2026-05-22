@@ -1,20 +1,94 @@
+import React from "react";
+
 import "./Header.css";
-import { useNavigate } from "react-router-dom";
+
+import {
+  FaPlane,
+  FaBell,
+  FaUserCircle,
+} from "react-icons/fa";
+
+import {
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
 
 function Header() {
 
   const navigate = useNavigate();
 
+  const location = useLocation();
+
+  // ======================================
+  // DYNAMIC TITLE
+  // ======================================
+
+  const getTitle = () => {
+
+    if (location.pathname.startsWith("/admin")) {
+      return "Admin Panel";
+    }
+
+    if (location.pathname.startsWith("/flight")) {
+      return "Flights";
+    }
+
+    if (location.pathname.startsWith("/booking")) {
+      return "Bookings";
+    }
+
+    if (location.pathname.startsWith("/passengers")) {
+      return "Passengers";
+    }
+
+    if (location.pathname === "/dashboard") {
+      return "Dashboard";
+    }
+
+    return "Airline System";
+  };
+
+  // ======================================
+  // LOGOUT
+  // ======================================
+
+  const handleLogout = () => {
+
+    localStorage.removeItem("token");
+
+    localStorage.removeItem("user");
+
+    navigate("/login");
+  };
+
   return (
-    <div className="header">
-      <h2>✈ Airline Dashboard</h2>
+
+    <header className="header">
+
+      {/* LEFT */}
+
+      <div className="header-left">
+
+        <FaPlane className="header-logo" />
+
+        <div>
+
+          <h2>{getTitle()}</h2>
+
+          <p>SkyLine Airways Management System</p>
+
+        </div>
+
+      </div>
+
+      {/* RIGHT */}
 
       <div className="header-right">
-        <span className="admin">👤 Admin</span>
-      
-      
 
-        {/* ADMIN BUTTON */}
+        <FaBell className="header-icon" />
+
+        <FaUserCircle className="header-icon" />
+
         <button
           className="admin-btn"
           onClick={() => navigate("/admin")}
@@ -22,18 +96,16 @@ function Header() {
           Admin
         </button>
 
-        {/* LOGOUT BUTTON */}
         <button
           className="logout-btn"
-          onClick={() => {
-            localStorage.removeItem("user");
-            window.location.href = "/login";
-          }}
+          onClick={handleLogout}
         >
           Logout
         </button>
+
       </div>
-    </div>
+
+    </header>
   );
 }
 

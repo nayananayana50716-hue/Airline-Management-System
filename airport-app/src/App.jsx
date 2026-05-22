@@ -1,30 +1,28 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 
-import Register from "./Components/Register";
-import Login from "./Pages/Login";
+import Register from "./components/Register";
+import Login from "./pages/Login";
 
-import Dashboard from "./Pages/Dashboard";
-import Flights from "./Pages/Flights";
-import SuccessPage from "./pages/SuccessPage";
+import Dashboard from "./pages/Dashboard";
+import Flights from "./pages/Flights";
 
-import Booking from "./Pages/Booking";
-import Passengers from "./Pages/Passengers";
-import Admin from "./Pages/Admin";
+
+import Booking from "./pages/Booking";
+import Passengers from "./pages/Passengers";
+import Admin from "./pages/Admin";
 
 import FlightForm from "./FlightComponents/FlightForm";
 import Flightlist from "./FlightComponents/Flightlist";
 
 import BookingForm from "./BookingComponents/BookingForm";
 import Bookinglist from "./BookingComponents/Bookinglist";
-
-import Layout from "./Components/Layout";
-import PrivateRoute from "./Components/PrivateRoute";
+import SuccessPage from "./pages/SuccessPage";
+import Layout from "./components/Layout";
+import generateTicket from "./utils/generateTicket";
+import SeatSelector from "./components/SeatSelector";
+import PrivateRoute from "./components/PrivateRoute";
 import "./App.css";
-import MyBookings from "./Pages/MyBookings";
-import AdminFlights from "./Pages/AdminFlights";
-import FlightCard from "../Components/FlightCard";
 
-import AdminDashboard from "./Pages/AdminDashboard";
 function App() {
   return (
     <Routes>
@@ -39,7 +37,7 @@ function App() {
 
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/flights" element={<Flights />} />
-         <Route path="/success" element={<SuccessPage />} />
+        
 
         {/* BOOKING */}
         <Route path="/booking" element={<Booking />} />
@@ -54,15 +52,12 @@ function App() {
         {/* FLIGHTS */}
         <Route path="/flightform" element={<FlightForm />} />
         <Route path="/flightlist" element={<Flightlist />} />
-
+<Route path="/success" element={<SuccessPage />} />
       </Route>
 
       {/* FALLBACK */}
       <Route path="*" element={<Navigate to="/login" />} />
-       <Route path="/mybookings" element={<MyBookings />} />
-   <Route path="/admin-flights" element={<AdminFlights />} />
- 
-   <Route path="/admin-dashboard" element={<AdminDashboard />} />
+
     </Routes>
   );
 }

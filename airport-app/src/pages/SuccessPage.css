@@ -1,33 +1,186 @@
+/* =========================
+   SUCCESS PAGE
+========================= */
+
 .success-container {
-  text-align: center;
+  min-height: 100vh;
+  width: 100%;
+  background:
+    linear-gradient(rgba(0,0,0,0.55),
+    rgba(0,0,0,0.65)),
+    url("https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=2074&auto=format&fit=crop");
+    
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   padding: 30px;
+  animation: fadeIn 1s ease;
 }
 
-.ticket {
-  width: 400px;
-  margin: auto;
-  padding: 20px;
-  border: 2px solid #333;
-  border-radius: 10px;
-  background: #f9f9f9;
-  text-align: left;
-}
+/* =========================
+   CARD
+========================= */
 
-.ticket h2 {
-  margin-top: 20px;
-  color: #0077cc;
-}
+.success-card {
+  width: 100%;
+  max-width: 500px;
 
-.ticket p {
-  margin: 8px 0;
-}
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(14px);
 
-button {
-  margin-top: 20px;
-  padding: 10px 20px;
-  background: #0077cc;
+  border: 1px solid rgba(255,255,255,0.2);
+
+  border-radius: 25px;
+
+  padding: 45px 35px;
+
+  text-align: center;
+
   color: white;
+
+  box-shadow:
+    0 10px 40px rgba(0,0,0,0.4);
+
+  animation: zoomIn 0.7s ease;
+}
+
+/* =========================
+   ICON / TITLE
+========================= */
+
+.success-card h1 {
+  font-size: 38px;
+  margin-bottom: 20px;
+
+  color: #00ffb7;
+
+  text-shadow: 0 0 20px rgba(0,255,183,0.5);
+}
+
+.success-card h2 {
+  font-size: 28px;
+  margin-bottom: 25px;
+  color: #fff;
+}
+
+/* =========================
+   DETAILS
+========================= */
+
+.success-card p {
+  font-size: 18px;
+
+  margin: 14px 0;
+
+  padding: 12px;
+
+  border-radius: 12px;
+
+  background: rgba(255,255,255,0.08);
+
+  border: 1px solid rgba(255,255,255,0.1);
+
+  transition: 0.3s;
+}
+
+.success-card p:hover {
+  transform: scale(1.03);
+
+  background: rgba(255,255,255,0.15);
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+.success-card button {
+  margin-top: 30px;
+
+  padding: 14px 28px;
+
   border: none;
-  border-radius: 5px;
+  border-radius: 12px;
+
+  background: linear-gradient(
+    135deg,
+    #00c6ff,
+    #0072ff
+  );
+
+  color: white;
+
+  font-size: 17px;
+  font-weight: bold;
+
   cursor: pointer;
+
+  transition: 0.3s ease;
+
+  box-shadow:
+    0 8px 20px rgba(0,114,255,0.4);
+}
+
+.success-card button:hover {
+  transform: translateY(-4px) scale(1.03);
+
+  box-shadow:
+    0 12px 30px rgba(0,114,255,0.6);
+}
+
+/* =========================
+   ANIMATIONS
+========================= */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+
+  .success-card {
+    padding: 30px 20px;
+  }
+
+  .success-card h1 {
+    font-size: 30px;
+  }
+
+  .success-card h2 {
+    font-size: 22px;
+  }
+
+  .success-card p {
+    font-size: 15px;
+  }
+
+  .success-card button {
+    width: 100%;
+  }
 }

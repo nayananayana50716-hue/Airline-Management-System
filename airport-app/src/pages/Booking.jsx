@@ -1,102 +1,201 @@
-import React, { useEffect, useState } from "react";
-import API from "../api";
-import SeatSelector from "../Components/SeatSelector";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import API from "../api/api";
+import SeatSelector from "../components/SeatSelector";
 import "./Booking.css";
 import generateTicket from "../utils/generateTicket";
 
 function Booking() {
-  const [flight, setFlight] = useState(null);
+  const location = useLocation();
+  const flight = location.state?.flight;
+
   const [selectedSeat, setSelectedSeat] = useState("");
+  const [paying, setPaying] = useState(false);
+  const [seats, setSeats] = useState([]);
 
-  // Fetch flight data
+  const [passenger, setPassenger] = useState({
+    name: "",
+    age: "",
+    gender: "",
+  });
+
+  // 🚨 SAFE GUARD (PREVENT BLANK SCREEN CRASH)
+  if (!flight) {
+    return (
+      <div style={{ padding: "20px" }}>
+        <h2>No flight selected</h2>
+        <p>Please go back and select a flight again.</p>
+      </div>
+    );
+  }
+
+  // ================= FETCH SEATS =================
   useEffect(() => {
-    const fetchFlight = async () => {
+    const fetchSeats = async () => {
       try {
-        const res = await API.get("/flights");
-
-        // Example: first flight
-        setFlight(res.data[0]);
-
-      } catch (error) {
-        console.log("Error fetching flight:", error);
+        const res = await API.get(`/seats/${flight._id}`);
+        setSeats(res.data || []);
+      } catch (err) {
+        console.log("Seat fetch error:", err);
       }
     };
 
-    fetchFlight();
-  }, []);
+    if (flight?._id) {
+      fetchSeats();
+    }
+  }, [flight]);
 
-  // Handle booking
-  const handleBook = async () => {
+  const handlePassengerChange = (e) => {
+    setPassenger({
+      ...passenger,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  // ================= PAYMENT =================
+  const handlePayment = async () => {
     try {
-      const user = JSON.parse(localStorage.getItem("user"));
       const token = localStorage.getItem("token");
 
-      const bookingData = {
-        userId: user._id,
-        flightId: flight._id,
-        seatNumber: selectedSeat,
+      if (!selectedSeat) {
+        alert("Select a seat first");
+        return;
+      }
+
+      if (!passenger.name || !passenger.age || !passenger.gender) {
+        alert("Fill all passenger details");
+        return;
+      }
+
+      setPaying(true);
+
+      const res = await API.post(
+        "/payment/create-order",
+        { amount: flight.price },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      const order = res.data;
+
+      const options = {
+        key: "rzp_test_xxxxxxxx", // replace with real key
+        amount: order.amount,
+        currency: "INR",
+        order_id: order.id,
+        name: "Airline Booking",
+
+        handler: async function (response) {
+          try {
+            const bookingData = {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              flightId: flight._id,
+              seatNumber: selectedSeat,
+              name: passenger.name,
+              age: passenger.age,
+              gender: passenger.gender,
+            };
+
+            const verifyRes = await API.post(
+              "/payment/verify",
+              bookingData,
+              {
+                headers: { Authorization: `Bearer ${token}` },
+              }
+            );
+
+            if (verifyRes.data.success) {
+              await generateTicket({
+                name: passenger.name,
+                age: passenger.age,
+                gender: passenger.gender,
+                flightNumber: flight.flightNumber,
+                from: flight.from,
+                to: flight.to,
+                seatNumber: selectedSeat,
+                price: flight.price,
+              });
+
+              alert("Booking Successful 🎉");
+            }
+          } catch (err) {
+            console.log(err);
+            alert("Payment verified but booking failed");
+          }
+        },
       };
 
-      await API.post("/bookings", bookingData, {
-        headers: {
-          Authorization: token,
-        },
-      });
-
-      alert("✅ Seat Booked Successfully!");
-
-    } catch (error) {
-      console.log(error);
-      alert("❌ Booking failed");
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (err) {
+      console.log(err);
+      alert("Payment failed");
+    } finally {
+      setPaying(false);
     }
   };
 
-  if (!flight) {
-    return <p>Loading flights...</p>;
-  }
-
   return (
     <div className="booking-container">
-      <h2>✈ Select Your Seat</h2>
+      <h2>✈ Book Flight</h2>
 
-      {/* Flight Info */}
       <div className="flight-info">
         <h3>{flight.flightNumber}</h3>
-        <p>
-          {flight.from} → {flight.to}
-        </p>
+        <p>{flight.from} → {flight.to}</p>
         <p>💰 ₹{flight.price}</p>
       </div>
 
-      {/* Seat Selector */}
+      {/* PASSENGER FORM */}
+      <div className="passenger-form">
+        <input
+          type="text"
+          name="name"
+          placeholder="Passenger Name"
+          value={passenger.name}
+          onChange={handlePassengerChange}
+        />
+
+        <input
+          type="number"
+          name="age"
+          placeholder="Age"
+          value={passenger.age}
+          onChange={handlePassengerChange}
+        />
+
+        <select
+          name="gender"
+          value={passenger.gender}
+          onChange={handlePassengerChange}
+        >
+          <option value="">Select Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+      </div>
+
+      {/* SEAT SELECTOR */}
       <SeatSelector
-        seats={flight.seats}
+        seats={seats}
         selectedSeat={selectedSeat}
         setSelectedSeat={setSelectedSeat}
       />
 
-      {/* Selected Seat */}
       {selectedSeat && (
-        <p style={{ marginTop: "15px" }}>
+        <p className="selected-seat">
           Selected Seat: <strong>{selectedSeat}</strong>
         </p>
       )}
 
-      {/* Book Button */}
       <button
-        onClick={handleBook}
-        disabled={!selectedSeat}
-        style={{
-          marginTop: "20px",
-          padding: "10px 20px",
-          background: "blue",
-          color: "white",
-          border: "none",
-          borderRadius: "6px",
-          cursor: "pointer",
-        }}
+        className="book-seat-btn"
+        onClick={handlePayment}
+        disabled={!selectedSeat || paying}
       >
-        Book Seat
+        {paying ? "Processing..." : "Pay & Book"}
       </button>
     </div>
   );

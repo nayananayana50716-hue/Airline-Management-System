@@ -1,37 +1,161 @@
-import User from "../models/User.js";
+import { pool, sql } from "../config/db.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-// REGISTER
-export const register = async (req, res) => {
-  const { name, email, password } = req.body;
+import { getUser } from "../models/user.js";
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+// ================= REGISTER =================
+export const registerUser = async (req, res) => {
 
-  const user = await User.create({
-    name,
-    email,
-    password: hashedPassword,
-  });
+  try {
 
-  res.json(user);
+    let {
+      Firstname,
+      Lastname,
+      Age,
+      PhoneNumber,
+      Email,
+      Password,
+      Role
+    } = req.body;
+
+    // VALIDATION
+    if (!Firstname || !Email || !Password) {
+      return res.status(400).json({
+        message: "Required fields missing"
+      });
+    }
+
+    Email = Email.trim().toLowerCase();
+
+    // CHECK EXISTING USER
+    const existingUser = await pool.request()
+      .input("Email", sql.VarChar, Email)
+      .query(`
+        SELECT * FROM Users
+        WHERE Email = @Email
+      `);
+
+    if (existingUser.recordset.length > 0) {
+      return res.status(400).json({
+        message: "Email already registered"
+      });
+    }
+
+    // HASH PASSWORD
+    const hashedPassword = await bcrypt.hash(Password, 10);
+
+    // INSERT USER
+    await pool.request()
+      .input("Firstname", sql.VarChar, Firstname)
+      .input("Lastname", sql.VarChar, Lastname)
+      .input("Age", sql.Int, Age)
+      .input("PhoneNumber", sql.VarChar, PhoneNumber)
+      .input("Email", sql.VarChar, Email)
+      .input("Password", sql.VarChar, hashedPassword)
+      .input("Role", sql.VarChar, Role || "user")
+      .query(`
+        INSERT INTO Users
+        (
+          Firstname,
+          Lastname,
+          Age,
+          PhoneNumber,
+          Email,
+          Password,
+          Role
+        )
+        VALUES
+        (
+          @Firstname,
+          @Lastname,
+          @Age,
+          @PhoneNumber,
+          @Email,
+          @Password,
+          @Role
+        )
+      `);
+
+    res.status(201).json({
+      success: true,
+      message: "Registration successful"
+    });
+
+  } catch (err) {
+
+    console.log("REGISTER ERROR:", err);
+
+    res.status(500).json({
+      message: "Server error"
+    });
+  }
 };
 
-// LOGIN
-export const login = async (req, res) => {
-  const { email, password } = req.body;
+// ================= LOGIN =================
+// ================= LOGIN =================
+export const loginUser = async (req, res) => {
 
-  const user = await User.findOne({ email });
+  try {
 
-  if (!user) return res.json({ message: "User not found" });
+    let { email, password } = req.body;
 
-  const isMatch = await bcrypt.compare(password, user.password);
+    // VALIDATION
+    if (!email || !password) {
+      return res.status(400).json({
+        message: "Email and password required"
+      });
+    }
 
-  if (!isMatch) return res.json({ message: "Invalid password" });
+    email = email.trim().toLowerCase();
 
-  const token = jwt.sign({ id: user._id }, "secretkey", {
-    expiresIn: "1d",
-  });
+    // GET USER
+    const user = await getUser(email);
 
-  res.json({ token, user });
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found"
+      });
+    }
+
+    // CHECK PASSWORD
+    const isMatch = await bcrypt.compare(
+      password,
+      user.Password
+    );
+
+    if (!isMatch) {
+      return res.status(400).json({
+        message: "Invalid password"
+      });
+    }
+
+    // CREATE TOKEN
+    const token = jwt.sign(
+      {
+        id: user.UserID,
+        email: user.Email,
+        role: user.Role
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1d"
+      }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Login successful",
+      token,
+      user
+    });
+
+  } catch (err) {
+
+    console.log("LOGIN ERROR:", err);
+
+    res.status(500).json({
+      message: "Server error"
+    });
+  }
 };

@@ -1,0 +1,177 @@
+/* ======================================
+   ANALYTICS SECTION
+====================================== */
+
+.analytics-section {
+  width: 100%;
+  padding: 20px;
+  margin-top: 30px;
+}
+
+/* ======================================
+   TITLE
+====================================== */
+
+.analytics-section h2 {
+  font-size: 28px;
+  margin-bottom: 25px;
+  color: #222;
+}
+
+/* ======================================
+   GRID
+====================================== */
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 25px;
+  width: 100%;
+}
+
+/* ======================================
+   CARD
+====================================== */
+
+.chart-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 20px;
+  width: 100%;
+  min-height: 420px;
+
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* ======================================
+   FULL WIDTH CARD
+====================================== */
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+/* ======================================
+   CARD TITLE
+====================================== */
+
+.chart-card h3 {
+  margin-bottom: 20px;
+  font-size: 20px;
+  color: #333;
+  text-align: center;
+}
+
+/* ======================================
+   RESPONSIVE
+====================================== */
+
+@media screen and (max-width: 768px) {
+
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-card {
+    min-height: 380px;
+  }
+
+  .analytics-section h2 {
+    font-size: 22px;
+    text-align: center;
+  }
+}/* ======================================
+   ANALYTICS SECTION
+====================================== */
+
+.analytics-section {
+  width: 100%;
+  padding: 20px;
+  margin-top: 30px;
+}
+
+/* ======================================
+   TITLE
+====================================== */
+
+.analytics-section h2 {
+  font-size: 28px;
+  margin-bottom: 25px;
+  color: #222;
+}
+
+/* ======================================
+   GRID
+====================================== */
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 25px;
+  width: 100%;
+}
+
+/* ======================================
+   CARD
+====================================== */
+
+.chart-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 20px;
+  width: 100%;
+  min-height: 420px;
+
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* ======================================
+   FULL WIDTH CARD
+====================================== */
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+/* ======================================
+   CARD TITLE
+====================================== */
+
+.chart-card h3 {
+  margin-bottom: 20px;
+  font-size: 20px;
+  color: #333;
+  text-align: center;
+}
+
+/* ======================================
+   RESPONSIVE
+====================================== */
+
+@media screen and (max-width: 768px) {
+
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-card {
+    min-height: 380px;
+  }
+
+  .analytics-section h2 {
+    font-size: 22px;
+    text-align: center;
+  }
+}

@@ -1,13 +1,34 @@
-import mongoose from "mongoose";
+import sql from "mssql";
+import dotenv from "dotenv";
 
-const connectDB = async () => {
-  try {
-    await mongoose.connect(process.env.MONGO_URI);
-    console.log("MongoDB Connected");
-  } catch (error) {
-    console.log("DB Error:", error);
-    process.exit(1);
-  }
+dotenv.config();
+
+const config = {
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  server: process.env.DB_SERVER,
+  database: process.env.DB_NAME,
+  port: Number(process.env.DB_PORT),
+
+  options: {
+    encrypt: false,
+    trustServerCertificate: true,
+  },
 };
 
-export default connectDB;
+let pool;
+
+try {
+
+  pool = await sql.connect(config);
+
+  console.log("✅ SQL Server Connected");
+
+} catch (error) {
+
+  console.log("❌ Database Connection Failed");
+
+  console.log(error);
+}
+
+export { sql, pool };

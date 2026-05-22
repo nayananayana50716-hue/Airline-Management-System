@@ -1,72 +1,154 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Register.css";
+import API from "../api/api";
 
 function Register() {
+
   const navigate = useNavigate();
 
   const [user, setUser] = useState({
-    name: "",
-    email: "",
-    password: "",
-    role: "user",
+    Firstname: "",
+    Lastname: "",
+    Age: "",
+    PhoneNumber: "",
+    Email: "",
+    Password: "",
+    Role: "user",
   });
 
+  // HANDLE INPUT CHANGE
   const handleChange = (e) => {
-    setUser({ ...user, [e.target.name]: e.target.value });
+    setUser({
+      ...user,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  const handleSubmit = (e) => {
+  // REGISTER FUNCTION
+  const registerFun = async (e) => {
+
     e.preventDefault();
 
-    if (!user.name || !user.email || !user.password) {
-      alert("Please fill all fields");
-      return;
+    try {
+
+      const res = await API.post("/users/register", {
+        Firstname: user.Firstname,
+        Lastname: user.Lastname,
+        Age: Number(user.Age),
+        PhoneNumber: user.PhoneNumber,
+        Email: user.Email.trim(),
+        Password: user.Password,
+        Role: user.Role,
+      });
+
+      console.log(res.data);
+
+      alert(res.data.message);
+
+      navigate("/login");
+
+    } catch (error) {
+
+      console.log(error);
+
+      alert(
+        error.response?.data?.message ||
+        "Registration failed"
+      );
     }
-
-    localStorage.setItem(user.email, JSON.stringify(user));
-
-    alert("Registered Successfully!");
-    navigate("/login");
   };
 
   return (
+
     <div className="register-container">
-      <form className="register-form" onSubmit={handleSubmit}>
+
+      <form
+        className="register-form"
+        onSubmit={registerFun}
+      >
+
         <h2>Create Account</h2>
 
         <input
           type="text"
-          name="name"
-          placeholder="Full Name"
+          name="Firstname"
+          placeholder="First Name"
+          value={user.Firstname}
+          onChange={handleChange}
+          required
+        />
+
+        <input
+          type="text"
+          name="Lastname"
+          placeholder="Last Name"
+          value={user.Lastname}
+          onChange={handleChange}
+          required
+        />
+
+        <input
+          type="number"
+          name="Age"
+          placeholder="Age"
+          value={user.Age}
+          onChange={handleChange}
+        />
+
+        <input
+          type="text"
+          name="PhoneNumber"
+          placeholder="Phone Number"
+          value={user.PhoneNumber}
           onChange={handleChange}
         />
 
         <input
           type="email"
-          name="email"
+          name="Email"
           placeholder="Email Address"
+          value={user.Email}
           onChange={handleChange}
+          required
         />
 
         <input
           type="password"
-          name="password"
+          name="Password"
           placeholder="Password"
+          value={user.Password}
           onChange={handleChange}
+          required
         />
 
-        <select name="role" onChange={handleChange}>
-          <option value="user">User</option>
-          <option value="admin">Admin</option>
+        <select
+          name="Role"
+          value={user.Role}
+          onChange={handleChange}
+        >
+          <option value="user">
+            User
+          </option>
+
+          <option value="admin">
+            Admin
+          </option>
         </select>
 
-        <button type="submit">Register</button>
+        <button type="submit">
+          Register
+        </button>
 
-        <p onClick={() => navigate("/login")} className="login-link">
+        <p
+          onClick={() => navigate("/login")}
+          className="login-link"
+        >
           Already have an account? Login
         </p>
+
       </form>
+
     </div>
   );
 }

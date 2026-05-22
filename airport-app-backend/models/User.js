@@ -1,9 +1,14 @@
-import mongoose from "mongoose";
+import { pool, sql } from "../config/db.js";
 
-const userSchema = new mongoose.Schema({
-  name: String,
-  email: String,
-  password: String,
-});
+// ================= GET USER =================
+export const getUser = async (Email) => {
 
-export default mongoose.model("User", userSchema);
+  const result = await pool.request()
+    .input("Email", sql.VarChar, Email)
+    .query(`
+      SELECT * FROM Users
+      WHERE LOWER(Email) = LOWER(@Email)
+    `);
+
+  return result.recordset[0];
+};

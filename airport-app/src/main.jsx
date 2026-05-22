@@ -1,3 +1,5 @@
+console.log("main.jsx: booting app (before imports)");
+
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
