@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Install frontend dependencies
+        run: npm --prefix airport-app ci
+
+      - name: Install backend dependencies
+        run: npm --prefix airport-app-backend ci
+
+      - name: Build frontend
+        run: npm --prefix airport-app run build
+
+      - name: Quick backend syntax check
+        run: node --check airport-app-backend/server.js
+
+      - name: Lint (optional)
+        run: |
+          if [ -f airport-app/package.json ]; then
+            npm --prefix airport-app run lint || true
+          fi

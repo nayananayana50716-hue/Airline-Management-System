@@ -8,6 +8,8 @@
     "dev": "npx concurrently \"npm:dev:backend\" \"npm:dev:frontend\"",
     "start-dev-win": "powershell -ExecutionPolicy Bypass -File start-dev.ps1",
     "stop-dev-win": "powershell -ExecutionPolicy Bypass -File stop-dev.ps1"
+    ,"start-dev-unix": "bash start-dev.sh",
+    "stop-dev-unix": "bash stop-dev.sh"
   },
   "devDependencies": {
     "concurrently": "^8.0.1"
