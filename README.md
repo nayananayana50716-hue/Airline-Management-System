@@ -80,3 +80,28 @@ Stop processes listening on the typical dev ports (5002, 5173-5180):
 npm run stop-dev-win
 ```
 
+
+## Smoke tests
+
+Run the socket smoke test (verifies Socket.IO real-time flow):
+
+```bash
+npm run smoke:socket
+```
+
+Run the end-to-end booking smoke test (registers test user, books seat, cancels):
+
+```bash
+npm run smoke:booking
+```
+
+Run both smoke tests sequentially:
+
+```bash
+npm run smoke:all
+```
+
+Notes:
+- These tests assume the backend is running and available at the URL configured in `airport-app/.env` (default `http://localhost:5002`).
+- The booking test performs writes to the database and attempts cleanup — use a development database.
+

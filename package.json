@@ -10,6 +10,9 @@
     "stop-dev-win": "powershell -ExecutionPolicy Bypass -File stop-dev.ps1"
     ,"start-dev-unix": "bash start-dev.sh",
     "stop-dev-unix": "bash stop-dev.sh"
+    "smoke:socket": "node airport-app/tools/socket-test.js",
+    "smoke:booking": "node airport-app/tools/booking-e2e-test.js",
+    "smoke:all": "npm run smoke:socket && npm run smoke:booking"
   },
   "devDependencies": {
     "concurrently": "^8.0.1"
